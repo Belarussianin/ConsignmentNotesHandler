@@ -1,3 +1,3 @@
-package excel.model.excel
+package domain.excel
 
 object OldExcelFile : ExcelFileType

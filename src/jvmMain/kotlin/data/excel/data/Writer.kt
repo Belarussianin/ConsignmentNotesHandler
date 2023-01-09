@@ -1,6 +1,6 @@
-package excel.data.write
+package data.excel.data
 
-import excel.model.consignment.Consignment
+import data.excel.model.consignment.Consignment
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Font
 import org.apache.poi.ss.usermodel.HorizontalAlignment
@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter
 
 object Writer {
 
-    fun write(consignments: List<Consignment>, resultPathname: String = "./result.xlsx") {
+    fun write(consignments: List<Consignment>, resultPathname: String = "result.xlsx") {
         var rowCounter = 0
         val workbook = XSSFWorkbook()
         val sheet = workbook.createSheet("Sheet1")

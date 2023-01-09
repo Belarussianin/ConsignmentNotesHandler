@@ -1,8 +1,8 @@
-package excel.data.read
+package data.excel.data
 
-import excel.isExcelFile
-import excel.model.excel.ExcelFile
-import excel.pmap
+import data.excel.isExcelFile
+import data.excel.model.excel.ExcelFile
+import data.excel.pmap
 import java.io.File
 
 object Reader {

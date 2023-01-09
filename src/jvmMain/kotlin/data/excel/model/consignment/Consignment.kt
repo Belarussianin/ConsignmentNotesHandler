@@ -1,7 +1,7 @@
-package excel.model.consignment
+package data.excel.model.consignment
 
-import excel.data.handle.Handler
-import excel.model.Product
+import data.excel.data.Handler
+import data.excel.model.Product
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Sheet
 

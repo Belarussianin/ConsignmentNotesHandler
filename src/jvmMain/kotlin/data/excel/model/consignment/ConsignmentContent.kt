@@ -1,6 +1,6 @@
-package excel.model.consignment
+package data.excel.model.consignment
 
-import excel.model.Product
+import data.excel.model.Product
 
 data class ConsignmentContent(
     val serialNumber: String,

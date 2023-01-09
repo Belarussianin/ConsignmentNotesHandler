@@ -1,4 +1,4 @@
-package excel.model
+package data.excel.model
 
 data class Product(
     val name: String,
