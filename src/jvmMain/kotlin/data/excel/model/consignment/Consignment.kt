@@ -5,8 +5,14 @@ import data.excel.model.Product
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Sheet
 
-class Consignment(sheet: Sheet) {
-    val content: ConsignmentContent by lazy(LazyThreadSafetyMode.PUBLICATION) { extractContent(sheet) }
+class Consignment(
+    sheet: Sheet
+) {
+    val content: ConsignmentContent
+
+    init {
+        content = extractContent(sheet)
+    }
 
     override fun toString(): String {
         return "Consignment(\n" +
@@ -28,10 +34,14 @@ class Consignment(sheet: Sheet) {
             cellList.asSequence()
                 .also { it -> serialNumber = cellList[it.indexOfFirst { it.toString() == "Серия" } + 1].toString() }
                 .also { it -> data = cellList[it.indexOfFirst { it.toString() == "Дата" } + 1].toString() }
-                .also { it -> sender = cellList[it.indexOfLast { it.toString() == "Грузоотправитель" } + 1].toString() }
+                .also { it ->
+                    sender = cellList[it.indexOfLast { it.toString() == "Грузоотправитель" } + 1].toString()
+                }
                 .also { it ->
                     productNumberColumn =
-                        cellList[it.indexOfFirst { it.toString().contains("ТОВАРНЫЙ РАЗДЕЛ", true) } + 1].columnIndex
+                        cellList[it.indexOfFirst {
+                            it.toString().contains("ТОВАРНЫЙ РАЗДЕЛ", true)
+                        } + 1].columnIndex
                 }
                 .also { it ->
                     rowsWithProducts =

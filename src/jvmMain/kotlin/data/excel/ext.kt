@@ -6,6 +6,14 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
+//TODO
+// different options to browse file on different platforms
+// https://genuinecoder.com/how-to-open-file-explorer-in-java/#:~:text=The%20easiest%20way%20to%20do,given%20file%20is%20a%20directory.&text=From%20Java%209%20onwards%2C%20Desktop,desktop%20module.
+
+fun openDirectory(directory: File) {
+    Runtime.getRuntime().exec("explorer ${directory.absolutePath}")
+}
+
 fun File.isOldExcelFile(): Boolean = name.endsWith(".xls")
 
 fun File.isNewExcelFile(): Boolean = name.endsWith(".xlsx")
