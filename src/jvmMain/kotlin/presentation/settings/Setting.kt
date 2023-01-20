@@ -1,4 +1,4 @@
-package screen.settings
+package presentation.settings
 
 data class Setting(
     val name: String,

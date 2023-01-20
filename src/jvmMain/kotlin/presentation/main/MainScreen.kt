@@ -1,4 +1,4 @@
-package screen.main
+package presentation.main
 
 import AppScreen
 import StringResources
@@ -20,12 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import data.excel.data.ConsignmentNotesHandler
 import data.excel.openDirectory
-import domain.preference.Preference
 import domain.preference.Preferences
-import domain.preference.type.StringPreference
-import kotlinx.coroutines.flow.map
+import domain.preference.StandardPreferences
 import kotlinx.coroutines.launch
-import screen.common.FileChooserCard
+import presentation.common.FileChooserCard
 import java.io.File
 import kotlin.time.Duration
 
@@ -40,20 +38,16 @@ fun MainScreen(
     var lastConvertDuration by remember { mutableStateOf<Triple<Duration, Duration, Duration>?>(null) }
     var isConvertInProcess by remember { mutableStateOf(false) }
 
-    val consignmentDirectory = preferences.get<StringPreference>("consignmentPath")
-        .map { it?.value?.value ?: ConsignmentNotesHandler.defaultConsignmentsDirectory }
-        .collectAsState(ConsignmentNotesHandler.defaultConsignmentsDirectory)
-    val resultDirectory = preferences.get<StringPreference>("resultPath")
-        .map { it?.value?.value ?: ConsignmentNotesHandler.defaultResultDirectory }
-        .collectAsState(ConsignmentNotesHandler.defaultResultDirectory)
+    val consignmentDirectory by preferences.getStandardOnlyValue(StandardPreferences.ConsignmentPath.default).collectAsState()
+    val resultDirectory by preferences.getStandardOnlyValue(StandardPreferences.ResultPath.default).collectAsState()
 
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(isConvertInProcess) {
         if (isConvertInProcess) {
             lastConvertDuration = ConsignmentNotesHandler.handle(
-                pathToConsignments = consignmentDirectory.value,
-                pathToResult = resultDirectory.value
+                pathToConsignments = consignmentDirectory,
+                pathToResult = resultDirectory
             )
             isConvertButtonEnabled = true
             convertButtonText = stringResources.convertButtonText
@@ -71,23 +65,23 @@ fun MainScreen(
             ) {
                 FileChooserCard(
                     title = stringResources.chooseConsignmentButtonText,
-                    currentState = consignmentDirectory.value,
+                    currentState = consignmentDirectory,
                     isEnabled = !isConvertInProcess
                 ) {
                     it?.let {
                         scope.launch {
-                            preferences.save(Preference("consignmentPath", StringPreference(it.absolutePath)))
+                            preferences.saveStandardPreference(StandardPreferences.ConsignmentPath(it.absolutePath))
                         }
                     }
                 }
                 FileChooserCard(
                     title = stringResources.chooseResultDirectoryButtonText,
-                    currentState = resultDirectory.value,
+                    currentState = resultDirectory,
                     isEnabled = !isConvertInProcess
                 ) {
                     it?.let {
                         scope.launch {
-                            preferences.save(Preference("resultPath", StringPreference(it.absolutePath)))
+                            preferences.saveStandardPreference(StandardPreferences.ResultPath(it.absolutePath))
                         }
                     }
                 }
@@ -109,9 +103,7 @@ fun MainScreen(
                     Text("${stringResources.writeTookText} ${writeDuration.inWholeSeconds} s, ${writeDuration.inWholeMilliseconds % 1000} ms.")
                     Text("${stringResources.allTookText} ${wholeDuration.inWholeSeconds} s, ${wholeDuration.inWholeMilliseconds % 1000} ms.")
                     Button(
-                        onClick = {
-                            openDirectory(File(resultDirectory.value))
-                        }
+                        onClick = { openDirectory(File(resultDirectory)) }
                     ) {
                         Text(stringResources.openResultDirectoryButtonText)
                     }

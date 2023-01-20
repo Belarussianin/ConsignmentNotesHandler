@@ -1,5 +1,10 @@
 package data.excel
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import java.io.File
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -39,3 +44,12 @@ inline fun <T, R> Iterable<T>.pmap(
 
     return ArrayList<R>(destination)
 }
+
+fun <T, M> StateFlow<T>.map(
+    coroutineScope: CoroutineScope,
+    mapper: (value: T) -> M
+): StateFlow<M> = map { mapper(it) }.stateIn(
+    coroutineScope,
+    SharingStarted.Eagerly,
+    mapper(value)
+)

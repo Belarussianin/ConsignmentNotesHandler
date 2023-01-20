@@ -1,4 +1,3 @@
-import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -15,10 +14,16 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
+compose {
+    kotlinCompilerPlugin.set(dependencies.compiler.forKotlin("1.7.20"))
+    kotlinCompilerPluginArgs.add("suppressKotlinVersionCompatibilityCheck=1.8.0")
+}
+
 kotlin {
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "11"
+            kotlinOptions.jvmTarget = "17"
+            kotlinOptions.languageVersion = "1.8"
         }
         withJava()
     }
@@ -29,7 +34,7 @@ kotlin {
                 implementation("org.apache.poi:poi:5.2.2")
                 implementation("org.apache.poi:poi-ooxml:5.2.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4-native-mt")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4-native-mt")
             }
         }
         val jvmTest by getting

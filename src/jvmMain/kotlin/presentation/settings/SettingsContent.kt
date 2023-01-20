@@ -1,4 +1,4 @@
-package screen.settings
+package presentation.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

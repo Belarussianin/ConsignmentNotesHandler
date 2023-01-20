@@ -1,4 +1,4 @@
-package screen.common
+package presentation.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button

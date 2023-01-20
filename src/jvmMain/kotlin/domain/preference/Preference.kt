@@ -1,14 +1,11 @@
 package domain.preference
 
-import domain.preference.type.BooleanPreference
-import domain.preference.type.IntPreference
-import domain.preference.type.PreferenceValue
-import domain.preference.type.StringPreference
-
-data class Preference<T : PreferenceValue>(
+data class Preference<T>(
     val name: String,
-    val value: T
+    val value: PreferenceValue<T>
 ) {
+    //constructor(name: String, value: T) : this(name, PreferenceValue(value))
+
     override fun toString(): String {
         return "name=$name,value=$value"
     }
@@ -21,22 +18,22 @@ data class Preference<T : PreferenceValue>(
             return line.substring(startIndex, endIndex)
         }
 
-        fun parseFromLine(line: String): Preference<PreferenceValue> {
+        fun parseFromLine(line: String): Preference<out Any> {
             val pairs = line.split(',')
                 .associate {
                     val (key, value) = it.split("=")
                     key to value
                 }
             val value = pairs["value"]!!
-            val preferenceValue = when (pairs["type"]!!) {
-                "string" -> StringPreference(value)
-                "int" -> IntPreference(value.toInt())
-                "boolean" -> BooleanPreference(value.toBoolean())
-                else -> throw Exception("Preference read error: type not recognized")
+            val preferenceValue: Any = when (val type = pairs["type"]!!) {
+                "string" -> value
+                "int" -> value.toInt()
+                "boolean" -> value.toBoolean()
+                else -> throw Exception("Preference read error: type '$type' is not recognized")
             }
             return Preference(
                 name = pairs["name"]!!,
-                value = preferenceValue
+                value = PreferenceValue(preferenceValue)
             )
         }
     }
