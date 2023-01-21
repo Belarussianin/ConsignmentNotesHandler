@@ -37,7 +37,7 @@ fun getPreferencesPath(isForDebug: Boolean = true) =
 @OptIn(ExperimentalFoundationApi::class)
 fun main() = application {
     val scope = rememberCoroutineScope()
-    val preferences = remember { Preferences(scope, getPreferencesPath(isForDebug = true)) }
+    val preferences = remember { Preferences(scope, getPreferencesPath(isForDebug = false)) }
 
     val isEnglish by preferences.getStandardOnlyValue(StandardPreferences.IsEnglishLanguage.default).collectAsState()
     val currentResources = if (isEnglish) englishResources else russianResources

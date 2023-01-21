@@ -25,7 +25,7 @@ fun FileChooserDialog(
     onResult: (result: File?) -> Unit
 ) {
     val fileChooser = JFileChooser(FileSystemView.getFileSystemView()).apply {
-        currentDirectory = File(currentFile ?: ".")
+        currentDirectory = File(currentFile ?: "./")
         dialogTitle = title
         fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES
         isAcceptAllFileFilterUsed = true
@@ -55,8 +55,9 @@ fun FileChooserCard(
             onResult = {
                 isFileChooserOpen = false
                 onFileChanged(it)
-                state = it?.absolutePath
-                println("Result $it")
+                if (it != null) {
+                    state = it.absolutePath
+                }
             }
         )
     }

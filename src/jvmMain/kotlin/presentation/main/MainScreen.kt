@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import data.excel.data.ConsignmentNotesHandler
+import data.excel.map
 import data.excel.openDirectory
 import domain.preference.Preferences
 import domain.preference.StandardPreferences
@@ -33,15 +34,19 @@ fun MainScreen(
     stringResources: StringResources,
     navigateTo: (AppScreen) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+
     var isConvertButtonEnabled by remember { mutableStateOf(true) }
     var convertButtonText by remember { mutableStateOf(stringResources.convertButtonText) }
     var lastConvertDuration by remember { mutableStateOf<Triple<Duration, Duration, Duration>?>(null) }
     var isConvertInProcess by remember { mutableStateOf(false) }
 
-    val consignmentDirectory by preferences.getStandardOnlyValue(StandardPreferences.ConsignmentPath.default).collectAsState()
-    val resultDirectory by preferences.getStandardOnlyValue(StandardPreferences.ResultPath.default).collectAsState()
-
-    val scope = rememberCoroutineScope()
+    val consignmentDirectory by preferences.getStandardOnlyValue(StandardPreferences.ConsignmentPath.default)
+        .map(scope) { path -> File(path).also { if (!it.exists()) it.mkdir() }.absolutePath }
+        .collectAsState()
+    val resultDirectory by preferences.getStandardOnlyValue(StandardPreferences.ResultPath.default)
+        .map(scope) { path -> File(path).also { if (!it.exists()) it.mkdir() }.absolutePath }
+        .collectAsState()
 
     LaunchedEffect(isConvertInProcess) {
         if (isConvertInProcess) {

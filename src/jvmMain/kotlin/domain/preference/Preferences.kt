@@ -18,7 +18,7 @@ class Preferences(
     companion object {
         const val debugPreferencesSavePath: String =
             "B:\\IdeaProjects\\ConsignmentNotesHandler\\src\\jvmMain\\resources\\saveFile.txt"
-        const val releasePreferencesSavePath: String = "\\saveFile.txt"
+        const val releasePreferencesSavePath: String = "./saveFile.txt"
 
         const val debugConsignmentPath: String =
             "B:\\IdeaProjects\\ConsignmentNotesHandler\\src\\jvmMain\\resources\\consignments"

@@ -7,8 +7,9 @@ import kotlin.time.measureTimedValue
 object ConsignmentNotesHandler {
 
     const val resources = "./src/jvmMain/resources"
-    const val defaultConsignmentsDirectory = "$resources/consignments/"
-    const val defaultResultDirectory = "./"
+    const val defaultConsignmentsDirectory = "consignments"
+    const val defaultResultDirectory = "results"
+    const val defaultDirectory = "./"
 
     @OptIn(ExperimentalTime::class)
     fun handle(

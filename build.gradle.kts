@@ -20,13 +20,17 @@ compose {
 }
 
 kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of("15"))
+    }
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "17"
+            kotlinOptions.jvmTarget = "15"
             kotlinOptions.languageVersion = "1.8"
         }
         withJava()
     }
+
     sourceSets {
         val jvmMain by getting {
             dependencies {
