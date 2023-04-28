@@ -47,18 +47,52 @@ object Writer {
                 product.apply {
                     consignment.content.apply {
                         val trimmedSender = sender.takeWhile { it != ',' }.trim()
-                        row.getCell(Columns.SenderWithIdAndDate.ordinal).regular(workbook).setCellValue(
-                            "$trimmedSender ЭТТН $serialNumber от $date г."
-                        )
+                        row.getCell(Columns.SenderWithIdAndDate.ordinal)
+                            .regular(workbook)
+                            .setStringCellValue("$trimmedSender ЭТТН $serialNumber от $date г.")
                     }
-                    row.getCell(Columns.ProductName.ordinal).regular(workbook).setCellValue(name)
-                    row.getCell(Columns.Price.ordinal).regular(workbook).center(workbook).setCellValue(price.toDouble())
-                    row.getCell(Columns.Count.ordinal).regular(workbook).center(workbook).setCellValue(count.toDouble())
+                    row.getCell(Columns.ProductName.ordinal)
+                        .regular(workbook)
+                        .setStringCellValue(name)
+                    row.getCell(Columns.Price.ordinal)
+                        .regular(workbook)
+                        .center(workbook)
+                        .setNumericCellValue(price.toDouble())
+                    row.getCell(Columns.Count.ordinal)
+                        .regular(workbook)
+                        .center(workbook)
+                        .setNumericCellValue(count.toDouble())
                 }
             }
         }
         //autoSizeColumns(sheet)
         saveSheet(workbook, resultPathname)
+    }
+
+    private fun Cell.setStringCellValue(value: String) {
+        setCellValue(value)
+        setCellFormat(CellFormat.STRING)
+    }
+
+    private fun Cell.setNumericCellValue(value: Double) {
+        //TODO fix -> (num as text error)
+        val formattedValue = String.format("%.2f", value)
+        setCellValue(formattedValue)
+        setCellFormat(CellFormat.NUMERIC)
+    }
+
+    private enum class CellFormat(val fmt: Short) {
+        NUMERIC(2),
+        STRING(0x31)
+    }
+
+    /**
+     * cellStyle: 2 - numeric
+     * cellStyle: 0x31 - text
+     */
+    private fun Cell.setCellFormat(cellFormat: CellFormat): Cell {
+        this.cellStyle.dataFormat = cellFormat.fmt
+        return this
     }
 
     private fun saveSheet(book: XSSFWorkbook, pathname: String) {
