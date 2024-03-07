@@ -143,15 +143,17 @@ class Consignment(
 
             val productNameColumn = cellList[noteIndex + 1].columnIndex
             val productCountColumn = cellList[noteIndex + 3].columnIndex
-            val productPriceColumn = cellList[noteIndex + 4].columnIndex
+            //val productPriceColumn = cellList[noteIndex + 4].columnIndex
+            val productPriceColumn = cellList[noteIndex + 8].columnIndex //NDS included
 
             val products = rowsWithProducts.asSequence()
                 .map { sheet.getRow(it) }
                 .map {
                     val name = it.getCell(productNameColumn).toString()
                     val count = it.getCell(productCountColumn).toString()
-                    val price = it.getCell(productPriceColumn).toString()
-                    Product(name, count, price)
+                    //val price = it.getCell(productPriceColumn).toString()
+                    val price = it.getCell(productPriceColumn).toString().toFloat() / count.toFloat()  //NDS included
+                    Product(name, count, price.toString())
                 }
                 .toList()
 

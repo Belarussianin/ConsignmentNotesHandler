@@ -9,8 +9,11 @@ import org.apache.poi.ss.usermodel.VerticalAlignment
 import org.apache.poi.xssf.usermodel.XSSFSheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.FileOutputStream
+import java.math.RoundingMode
+import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 
 object Writer {
 
@@ -41,43 +44,56 @@ object Writer {
             LocalDate.parse(it.content.date, dateTimeFormatter)
         }
 
-        result.forEach { consignment ->
-            consignment.content.products.forEach { product ->
+        for (consignment in result) {
+            for (product in consignment.content.products) {
                 val row = createRow(sheet, ++rowCounter)
-                product.apply {
-                    consignment.content.apply {
-                        val trimmedSender = sender.takeWhile { it != ',' }.trim()
-                        row.getCell(Columns.SenderWithIdAndDate.ordinal)
-                            .regular(workbook)
-                            .setStringCellValue("$trimmedSender ЭТТН $serialNumber от $date г.")
+                val trimmedSender = consignment.content.sender.takeWhile { it != ',' }.trim()
+
+                fun Row.setCell(cellNum: Int, value: String, isRegular: Boolean = true, isCentered: Boolean = false) {
+                    getCell(cellNum).apply {
+                        takeIf { isRegular }?.regular(workbook)
+                        takeIf { isCentered }?.center(workbook)
+                        setCellValue(value)
                     }
-                    row.getCell(Columns.ProductName.ordinal)
-                        .regular(workbook)
-                        .setStringCellValue(name)
-                    row.getCell(Columns.Price.ordinal)
-                        .regular(workbook)
-                        .center(workbook)
-                        .setNumericCellValue(price.toDouble())
-                    row.getCell(Columns.Count.ordinal)
-                        .regular(workbook)
-                        .center(workbook)
-                        .setNumericCellValue(count.toDouble())
                 }
+
+                row.setCell(
+                    cellNum = Columns.SenderWithIdAndDate.ordinal,
+                    value = "$trimmedSender ЭТТН ${consignment.content.serialNumber} от ${consignment.content.date} г."
+                )
+                row.setCell(
+                    cellNum = Columns.ProductName.ordinal,
+                    value = product.name
+                )
+                val roundedPrice = product.price.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toString()
+                row.setCell(
+                    cellNum = Columns.Price.ordinal,
+                    value = roundedPrice,
+                    isCentered = true
+                )
+                row.setCell(
+                    cellNum = Columns.Count.ordinal,
+                    value = product.count.toDouble().roundToInt().toString(),
+                    isCentered = true
+                )
             }
         }
-        //autoSizeColumns(sheet)
         saveSheet(workbook, resultPathname)
     }
 
-    private fun Cell.setStringCellValue(value: String) {
-        setCellValue(value)
-        setCellFormat(CellFormat.STRING)
-    }
+//    private fun Cell.setNumericDoubleCellValue(value: Double) {
+//        //TODO fix -> (num as text error)
+//        val formattedValue = String.format("%.2f", value)
+//        setCellValue(formattedValue)
+//        setCellFormat(CellFormat.NUMERIC)
+//    }
 
-    private fun Cell.setNumericCellValue(value: Double) {
+    private fun Cell.setNumericDecimalCellValue(value: Double) {
         //TODO fix -> (num as text error)
-        val formattedValue = String.format("%.2f", value)
-        setCellValue(formattedValue)
+        val formatter = NumberFormat.getNumberInstance().apply {
+            maximumFractionDigits = 0
+        }
+        setCellValue(formatter.format(value))
         setCellFormat(CellFormat.NUMERIC)
     }
 
@@ -152,8 +168,8 @@ object Writer {
     private enum class Columns(val value: String) {
         SenderWithIdAndDate("Поставщик товара, документ, его номер и дата"),
         ProductName("Наименование, вид (сорт, артикул) товара"),
-        CountEmpty("количество"),
-        PriceEmpty("стоимость (руб.)"),
+        CountEmpty(""/*"количество"*/),
+        PriceEmpty(""/*"стоимость (руб.)"*/),
         Price("цена"),
         Count("количество")
     }

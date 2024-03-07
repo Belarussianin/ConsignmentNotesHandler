@@ -2,6 +2,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization") version "1.4.21"
     id("org.jetbrains.compose")
 }
 
@@ -24,19 +25,23 @@ kotlin {
         languageVersion.set(JavaLanguageVersion.of("15"))
     }
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "15"
-            kotlinOptions.languageVersion = "1.8"
-        }
+        //compilations.all {
+        //    kotlinOptions.jvmTarget = "15"
+        //    kotlinOptions.languageVersion = "1.8"
+        //}
         withJava()
     }
 
     sourceSets {
         val jvmMain by getting {
             dependencies {
-                implementation(compose.desktop.currentOs)
-                implementation("org.apache.poi:poi:5.2.2")
-                implementation("org.apache.poi:poi-ooxml:5.2.2")
+                implementation(compose.desktop.windows_x64)
+
+                implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.16.1")    //Xml
+
+                implementation("org.apache.poi:poi:5.2.2")                                          //Excel 97-2003
+                implementation("org.apache.poi:poi-ooxml:5.2.2")                                    //Excel 2007+
+
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4-native-mt")
             }
@@ -49,9 +54,18 @@ compose.desktop {
     application {
         mainClass = "MainKt"
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
+            targetFormats(
+                TargetFormat.Dmg,
+                TargetFormat.Msi,
+                TargetFormat.Deb,
+                TargetFormat.Exe
+            )
             packageName = "ConsignmentNotesHandler"
             packageVersion = "1.0.0"
+        }
+        buildTypes.release.proguard {
+            configurationFiles.from(project.file("proguard-rules.pro"))
+            //obfuscate.set(true)
         }
     }
 }

@@ -1,5 +1,6 @@
 package data.excel.test
 
+import data.excel.data.ConsignmentNotesHandler
 import data.excel.data.Handler
 import data.excel.data.Reader
 import data.excel.data.Writer
@@ -8,21 +9,14 @@ import org.apache.poi.ss.usermodel.Sheet
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
 
-const val resources = "./src/jvmMain/resources"
+const val resources = "C:\\Users\\arsen\\OneDrive\\Desktop\\октябрь"//"./src/jvmMain/resources"
 
 @OptIn(ExperimentalTime::class)
 fun main() {
-    val (excelFiles, readDuration) = measureTimedValue {
-        val packageWithConsignments = "$resources/consignments/"
-        Reader.read(packageWithConsignments)
-    }
-    val (consignments, handleDuration) = measureTimedValue {
-        Handler.handle(excelFiles)
-    }
-    val rows = consignments.pmap {
-        sheetToRowList(it.sheet)
-    }
-    println(rows.joinToString("\n"))
+    ConsignmentNotesHandler.handle(
+        pathToConsignments = resources,
+        pathToResult = "C:\\Users\\arsen\\OneDrive\\Desktop\\resultS"
+    )
 }
 
 fun sheetToRowList(sheet: Sheet): List<String> {
