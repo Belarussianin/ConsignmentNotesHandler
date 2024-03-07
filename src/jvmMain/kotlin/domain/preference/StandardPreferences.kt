@@ -1,10 +1,10 @@
 package domain.preference
 
-import data.excel.data.ConsignmentNotesHandler
+import experimental.module.CoreModule
 
 sealed class StandardPreferences<T : Any>(val name: String, open val value: T) {
     class ConsignmentPath(
-        override val value: String = ConsignmentNotesHandler.defaultConsignmentsDirectory
+        override val value: String = CoreModule.defaultConsignmentsDirectory
     ) : StandardPreferences<String>("consignmentPath", value) {
         companion object {
             @JvmField
@@ -13,7 +13,7 @@ sealed class StandardPreferences<T : Any>(val name: String, open val value: T) {
     }
 
     class ResultPath(
-        override val value: String = ConsignmentNotesHandler.defaultResultDirectory
+        override val value: String = CoreModule.defaultResultDirectory
     ) : StandardPreferences<String>("resultPath", value) {
         companion object {
             @JvmField

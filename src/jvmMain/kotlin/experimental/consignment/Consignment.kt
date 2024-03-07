@@ -1,2 +1,3 @@
 package experimental.consignment
 
+interface Consignment

@@ -1,14 +1,24 @@
 package experimental.module
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
-import experimental.consignment.XmlConsignment
-import experimental.xml.XmlFile
+import data.excel.isConsignmentExcelFile
+import experimental.consignment.Consignment
+import experimental.xml.isConsignmentXmlFile
 import java.io.File
 
-interface ConsignmentModule {
+class ConsignmentModule(
+    val excelModule: ExcelModule,
+    val xmlModule: XmlModule
+) : ConsignmentIO {
 
-    fun xmlConsignment(xmlFile: XmlFile): XmlConsignment {
-        return XmlMapper().readValue(xmlFile, XmlConsignment::class.java)
-            ?: throw Exception("XmlConsignmentReaderException: consignment is null")
+    override fun read(file: File): Consignment {
+        return when {
+            file.isConsignmentExcelFile() -> excelModule.read(file)
+            file.isConsignmentXmlFile() -> xmlModule.read(file)
+            else -> throw Exception("Unsupported file type")
+        }
+    }
+
+    override fun write(consignments: List<Consignment>, resultPathname: String): File {
+        return excelModule.write(consignments, resultPathname)
     }
 }

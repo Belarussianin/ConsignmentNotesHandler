@@ -18,11 +18,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import data.excel.data.ConsignmentNotesHandler
 import data.excel.map
 import data.excel.openDirectory
 import domain.preference.Preferences
 import domain.preference.StandardPreferences
+import experimental.module.ConsignmentModule
+import experimental.module.CoreModule
+import experimental.module.ExcelModule
+import experimental.module.XmlModule
 import kotlinx.coroutines.launch
 import presentation.common.FileChooserCard
 import java.io.File
@@ -50,7 +53,7 @@ fun MainScreen(
 
     LaunchedEffect(isConvertInProcess) {
         if (isConvertInProcess) {
-            lastConvertDuration = ConsignmentNotesHandler.handle(
+            lastConvertDuration = CoreModule(ConsignmentModule(ExcelModule(), XmlModule())).convert(
                 pathToConsignments = consignmentDirectory,
                 pathToResult = resultDirectory
             )
