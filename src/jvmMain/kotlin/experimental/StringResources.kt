@@ -1,3 +1,5 @@
+package consignments
+
 data class StringResources(
     val appName: String,
     val chooseConsignmentButtonText: String,

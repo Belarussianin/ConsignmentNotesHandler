@@ -1,7 +1,7 @@
 package experimental.consignment.excel
 
 import experimental.consignment.Consignment
-import experimental.file.ExcelFile
+import experimental.file.excel.ExcelFile
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Sheet
 import java.io.File

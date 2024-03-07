@@ -22,8 +22,10 @@ import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
-import domain.preference.Preferences
-import domain.preference.StandardPreferences
+import consignments.englishResources
+import consignments.russianResources
+import experimental.preference.Preferences
+import experimental.preference.StandardPreferences
 import presentation.main.MainScreen
 import presentation.settings.SettingsScreen
 

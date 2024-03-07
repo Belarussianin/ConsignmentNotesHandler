@@ -1,4 +1,4 @@
-package domain.preference
+package experimental.preference
 
 data class Preference<T>(
     val name: String,

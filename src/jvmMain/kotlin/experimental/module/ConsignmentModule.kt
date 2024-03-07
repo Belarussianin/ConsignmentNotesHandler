@@ -1,6 +1,6 @@
 package experimental.module
 
-import data.excel.isConsignmentExcelFile
+import experimental.excel.isConsignmentExcelFile
 import experimental.consignment.Consignment
 import experimental.xml.isConsignmentXmlFile
 import java.io.File

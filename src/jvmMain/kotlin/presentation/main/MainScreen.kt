@@ -1,7 +1,6 @@
 package presentation.main
 
 import AppScreen
-import StringResources
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,14 +17,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import data.excel.map
-import data.excel.openDirectory
-import domain.preference.Preferences
-import domain.preference.StandardPreferences
+import consignments.StringResources
+import experimental.map
 import experimental.module.ConsignmentModule
 import experimental.module.CoreModule
 import experimental.module.ExcelModule
 import experimental.module.XmlModule
+import experimental.openDirectory
+import experimental.preference.Preferences
+import experimental.preference.StandardPreferences
 import kotlinx.coroutines.launch
 import presentation.common.FileChooserCard
 import java.io.File

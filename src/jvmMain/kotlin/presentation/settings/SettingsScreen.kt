@@ -1,13 +1,13 @@
 package presentation.settings
 
 import AppScreen
-import StringResources
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import domain.preference.Preferences
-import domain.preference.StandardPreferences
+import consignments.StringResources
+import experimental.preference.Preferences
+import experimental.preference.StandardPreferences
 import kotlinx.coroutines.launch
 
 @Composable

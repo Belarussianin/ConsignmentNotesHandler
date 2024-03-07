@@ -1,4 +1,4 @@
-package domain.preference
+package experimental.preference
 
 @JvmInline
 value class PreferenceValue<T>(val value: T) {

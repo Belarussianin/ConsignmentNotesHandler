@@ -1,10 +1,7 @@
-package experimental.file
+package experimental.file.excel
 
-import data.excel.isConsignmentExcelFile
-import data.excel.isOldExcelFile
-import domain.excel.ExcelFileType
-import domain.excel.NewExcelFile
-import domain.excel.OldExcelFile
+import experimental.excel.isConsignmentExcelFile
+import experimental.excel.isOldExcelFile
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
