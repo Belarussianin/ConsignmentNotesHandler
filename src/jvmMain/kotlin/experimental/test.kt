@@ -21,11 +21,8 @@ private fun expTest() {
         excelModule = ExcelModule(),
         xmlModule = XmlModule()
     )
-    val coreModule = CoreModule(
-        consignmentModule = consignmentModule
-    )
-    val (readTime, processingTime, writeTime) = coreModule.convert(dirPath, dirPath, "SomeWeirdShit")
-
+    val (file, convertDuration)  = CoreModule.convert(dirPath, dirPath, "SomeWeirdShit")
+    val (readTime, processingTime, writeTime) = convertDuration
     println("Read took ${readTime.inWholeSeconds} s, ${readTime.inWholeMilliseconds % 1000} ms.")
     println("Handle took ${processingTime.inWholeSeconds} s, ${processingTime.inWholeMilliseconds % 1000} ms.")
     println("Write took ${writeTime.inWholeSeconds} s, ${writeTime.inWholeMilliseconds % 1000} ms.")

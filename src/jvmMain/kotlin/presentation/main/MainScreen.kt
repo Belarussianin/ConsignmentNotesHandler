@@ -42,6 +42,7 @@ fun MainScreen(
     var isConvertButtonEnabled by remember { mutableStateOf(true) }
     var convertButtonText by remember { mutableStateOf(stringResources.convertButtonText) }
     var lastConvertDuration by remember { mutableStateOf<Triple<Duration, Duration, Duration>?>(null) }
+    var resultFile by remember { mutableStateOf<File?>(null) }
     var isConvertInProcess by remember { mutableStateOf(false) }
 
     val consignmentDirectory by preferences.getStandardOnlyValue(StandardPreferences.ConsignmentPath.default)
@@ -53,10 +54,13 @@ fun MainScreen(
 
     LaunchedEffect(isConvertInProcess) {
         if (isConvertInProcess) {
-            lastConvertDuration = CoreModule(ConsignmentModule(ExcelModule(), XmlModule())).convert(
+            val (file, convertDuration) = CoreModule.convert(
                 pathToConsignments = consignmentDirectory,
                 pathToResult = resultDirectory
             )
+            resultFile = file
+            lastConvertDuration = convertDuration
+
             isConvertButtonEnabled = true
             convertButtonText = stringResources.convertButtonText
             isConvertInProcess = false

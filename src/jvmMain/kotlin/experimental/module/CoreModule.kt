@@ -1,29 +1,27 @@
 package experimental.module
 
 import experimental.module.FileSystemModule.allConsignmentFiles
+import java.io.File
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
 
-class CoreModule(
-//    val fileSystemModule: FileSystemModule,
-//    val excelModule: ExcelModule,
-//    val xmlModule: XmlModule,
-    val consignmentModule: ConsignmentModule
-) {
-    companion object {
-        const val resources = "./src/jvmMain/resources"
-        const val defaultConsignmentsDirectory = "consignments"
-        const val defaultResultDirectory = "results"
-        const val defaultDirectory = "./"
-    }
+object CoreModule {
+    val excelModule: ExcelModule = ExcelModule()
+    val xmlModule: XmlModule = XmlModule()
+    val consignmentModule: ConsignmentModule = ConsignmentModule(excelModule, xmlModule)
+
+    const val resources = "./src/jvmMain/resources"
+    const val defaultConsignmentsDirectory = "consignments"
+    const val defaultResultDirectory = "results"
+    const val defaultDirectory = "./"
 
     @OptIn(ExperimentalTime::class)
     fun convert(
         pathToConsignments: String? = null,
         pathToResult: String? = null,
         resultFileName: String = "result"
-    ): Triple<Duration, Duration, Duration> {
+    ): Pair<File, Triple<Duration, Duration, Duration>> {
         //TODO
         // check paths and name
         val path = (pathToConsignments?.plus("\\") ?: defaultConsignmentsDirectory)
@@ -43,7 +41,9 @@ class CoreModule(
                 consignments,
                 resultPathname = "${pathToResult?.plus("\\") ?: defaultResultDirectory}$resultFileName.xlsx"
             )
+            resultFile
         }
-        return Triple(readDuration, handleDuration, writeDuration)
+        println(resultFile)
+        return resultFile to Triple(readDuration, handleDuration, writeDuration)
     }
 }
