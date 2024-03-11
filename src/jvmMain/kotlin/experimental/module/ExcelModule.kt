@@ -56,11 +56,18 @@ class ExcelModule : ConsignmentIO {
                 val row = createRow(sheet, ++rowCounter)
                 val trimmedSender = consignment.sender.takeWhile { it != ',' }.trim()
 
-                fun Row.setCell(cellNum: Int, value: String, isRegular: Boolean = true, isCentered: Boolean = false) {
+                fun Row.setCell(
+                    cellNum: Int,
+                    value: String,
+                    isRegular: Boolean = true,
+                    isCentered: Boolean = false,
+                    isNum: Boolean = false
+                ) {
                     getCell(cellNum).apply {
                         takeIf { isRegular }?.regular(workbook)
                         takeIf { isCentered }?.center(workbook)
-                        setCellValue(value)
+                        if (isNum) setCellValue(value.toDouble())
+                        else setCellValue(value)
                     }
                 }
 
@@ -75,7 +82,8 @@ class ExcelModule : ConsignmentIO {
                 row.setCell(
                     cellNum = Columns.Price.ordinal,
                     value = product.amount,
-                    isCentered = true
+                    isCentered = true,
+                    isNum = true
                 )
                 row.setCell(
                     cellNum = Columns.Count.ordinal,
